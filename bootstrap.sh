@@ -10,7 +10,7 @@ do_jenkins_check() {
 	status_code=000
 
 	while [ $reached_jenkins -eq 0 -a $checks -lt $max_checks ]; do 
-		next_status_code=$(curl --output /dev/null --silent --head --write-out "%{http_code}" http://localhost:8080)
+		next_status_code=$(curl -I --output /dev/null --silent --head --write-out "%{http_code}" http://localhost:8080 | head -n 1 | cut -d$' ' -f2)
 
 		if [ ! $next_status_code -eq $status_code ]; then
 			printf "Service changed from a %s response to a %s response." $status_code $next_status_code
@@ -19,7 +19,7 @@ do_jenkins_check() {
 		status_code=$next_status_code
 
 		checks=$[$checks+1]
-		if [ $status_code -eq 200 ]; then
+		if [ $status_code -eq 403 ]; then
 			reached_jenkins=1
 			break
 		fi
@@ -81,5 +81,8 @@ java -jar /home/vagrant/jenkins-cli.jar restart > /dev/null
 
 echo "Restarted Jenkins after installing plugins."
 do_jenkins_check
+
+jenkins_password=$(cat /var/lib/jenkins/secrets/initialAdminPassword)
+echo "Browse to https://localhost:8100 and use this password for initial setup: "$jenkins_password
 
 printf "Setup complete!\n"

@@ -38,8 +38,8 @@ do_jenkins_check() {
 # TIMEZONE
 # Credit: http://www.thegeekstuff.com/2010/09/change-timezone-in-linux/
 echo "Setting timezone to America/Central"
-rm /etc/localtime
-ln -s /usr/share/zoneinfo/US/Central /etc/localtime
+sudo rm /etc/localtime
+sudo ln -s /usr/share/zoneinfo/US/Central /etc/localtime
 
 # INSTALL JENKINS
 sudo apt-get -y remove jenkins
@@ -66,8 +66,21 @@ printf "\n\n. /home/vagrant/.bash_aliases" >> /home/vagrant/.bashrc
 
 do_jenkins_check
 
+printf "Switch off Jenkins setup"
+sudo sed 's/^JAVA_ARGS=.*/JAVA_ARGS="-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"/' /etc/default/jenkins > /etc/default/jenkins
+
+sudo service jenkins restart
+
+do_jenkins_check
+
 printf "Setting up Jenkins CLI\n"
-wget --quiet http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
+sleep 5
+wget --quiet http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar -O /home/vagrant/jenkins-cli.jar
+sudo chmod 755 /home/vagrant/jenkins-cli.jar
+
+if [ -s /home/vagrant/jenkins-cli.jar ]; then
+    printf "Jenkins cli downloaded successfully."
+fi
 
 printf "\n export JENKINS_URL=http://localhost:8080/" >> /home/vagrant/.bashrc
 printf "\n alias jnkns=\"java -jar /home/vagrant/jenkins-cli.jar\"" >> /home/vagrant/.bashrc
@@ -75,14 +88,15 @@ printf "\n alias jnkns=\"java -jar /home/vagrant/jenkins-cli.jar\"" >> /home/vag
 export JENKINS_URL=http://localhost:8080
 
 echo "Installing build-timeout plugin for Jenkins."
-java -jar /home/vagrant/jenkins-cli.jar install-plugin build-timeout > /dev/null
-java -jar /home/vagrant/jenkins-cli.jar install-plugin job-dsl > /dev/null
-java -jar /home/vagrant/jenkins-cli.jar restart > /dev/null
+jenkins_password=$(sudo cat /var/lib/jenkins/secrets/initialAdminPassword)
+
+java -jar /home/vagrant/jenkins-cli.jar install-plugin build-timeout --username admin --password ${jenkins_password} > /dev/null
+java -jar /home/vagrant/jenkins-cli.jar install-plugin job-dsl --username admin --password ${jenkins_password} > /dev/null
+java -jar /home/vagrant/jenkins-cli.jar restart --username admin --password ${jenkins_password} > /dev/null
 
 echo "Restarted Jenkins after installing plugins."
 do_jenkins_check
 
-jenkins_password=$(cat /var/lib/jenkins/secrets/initialAdminPassword)
 echo "Browse to https://localhost:8100 and use this password for initial setup: "$jenkins_password
 
 printf "Setup complete!\n"

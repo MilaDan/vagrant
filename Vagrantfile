@@ -38,5 +38,5 @@ Vagrant.configure(2) do |config|
 
   # Set the name of the VM. See: http://stackoverflow.com/a/17864388/100134
     config.vm.define :sonarqube do |sonarqube|
-    end
+    #end
   end

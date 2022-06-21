@@ -27,7 +27,7 @@ Vagrant.configure(2) do |config|
 
 # Vagrant.configure(2) do |config|
   config.vm.define :sonarqube do |config|
-    config.vm.box = "geerlingguy/ubuntu1404"
+    config.vm.box = "geerlingguy/centos7" # "geerlingguy/ubuntu1404"
     config.ssh.insert_key = false
     config.vm.hostname = "sonarqube"
     config.vm.network :forwarded_port, guest: 9000, host: 9000

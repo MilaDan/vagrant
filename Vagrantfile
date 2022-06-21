@@ -6,7 +6,7 @@ Vagrant.configure(2) do |config|
     config.vm.box = "geerlingguy/centos7"
     config.vm.provision :shell, path: "artifactory.sh"
     config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-    # artifactory 
+    config.vm.hostname = "artifactory"
     config.vm.network :forwarded_port, guest: 8081, host: 8081
     config.vm.provider :virtualbox do |vb|
       vb.memory = 256
@@ -17,7 +17,8 @@ Vagrant.configure(2) do |config|
 
 # Vagrant.configure(2) do |config|
   config.vm.define :jenkins do |config|
-    config.vm.box = "geerlingguy/centos7" # "ubuntu/trusty64"
+    config.vm.box = "geerlingguy/centos7"
+    config.vm.hostname = "jenkins"
     config.vm.network "forwarded_port", guest: 8080, host: 8080
     config.vm.provision :shell, path: "jenkins.sh"
     config.vm.provider :virtualbox do |vb|
@@ -27,11 +28,11 @@ Vagrant.configure(2) do |config|
 
 # Vagrant.configure(2) do |config|
   config.vm.define :sonarqube do |config|
-    config.vm.box = "geerlingguy/centos7" # "geerlingguy/ubuntu1404"
+    config.vm.box = "geerlingguy/centos7"
     config.ssh.insert_key = false
     config.vm.hostname = "sonarqube"
     config.vm.network :forwarded_port, guest: 9000, host: 9000
-    config.vm.provision :shell, path: "provision.sh"
+    config.vm.provision :shell, path: "sonarqube.sh"
     config.vm.provider :virtualbox do |vb|
       vb.name = "sonarqube"
       vb.memory = 512

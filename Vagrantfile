@@ -25,6 +25,8 @@ Vagrant.configure(2) do |config|
   config.vm.define :sonarqube do |config|
     config.vm.box = "geerlingguy/ubuntu1404"
     config.ssh.insert_key = false
+    config.vm.hostname = "sonarqube"
+    config.vm.network :forwarded_port, guest: 9000, host: 9000
     config.vm.provider :virtualbox do |v|
       v.name = "sonarqube"
       v.memory = 512
@@ -32,11 +34,10 @@ Vagrant.configure(2) do |config|
       v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--ioapic", "on"]
     end
-
-    config.vm.hostname = "sonarqube"
-    config.vm.network :forwarded_port, guest: 9000, host: 9000
+  end
+    
 
   # Set the name of the VM. See: http://stackoverflow.com/a/17864388/100134
     #config.vm.define :sonarqube do |sonarqube|
     #end
-  end
+  #end

@@ -4,7 +4,7 @@
 Vagrant.configure(2) do |config|
   config.vm.define :artifactory do |config|
     config.vm.box = "geerlingguy/centos7"
-    config.vm.provision :shell, path: "script.sh"
+    config.vm.provision :shell, path: "artifactory.sh"
     config.vm.box_url = "http://files.vagrantup.com/precise64.box"
     # artifactory 
     config.vm.network :forwarded_port, guest: 8081, host: 8081

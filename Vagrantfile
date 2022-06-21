@@ -31,6 +31,7 @@ Vagrant.configure(2) do |config|
     config.ssh.insert_key = false
     config.vm.hostname = "sonarqube"
     config.vm.network :forwarded_port, guest: 9000, host: 9000
+    config.vm.provision :shell, path: "sonarqube.sh"
     config.vm.provider :virtualbox do |vb|
       vb.name = "sonarqube"
       vb.memory = 512

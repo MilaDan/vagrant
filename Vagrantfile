@@ -37,6 +37,6 @@ Vagrant.configure(2) do |config|
     config.vm.network :forwarded_port, guest: 9000, host: 9000
 
   # Set the name of the VM. See: http://stackoverflow.com/a/17864388/100134
-    config.vm.define :sonarqube do |sonarqube|
+    #config.vm.define :sonarqube do |sonarqube|
     #end
   end

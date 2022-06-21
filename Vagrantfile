@@ -35,7 +35,7 @@ Vagrant.configure(2) do |config|
       v.customize ["modifyvm", :id, "--ioapic", "on"]
     end
   end
-    
+end 
 
   # Set the name of the VM. See: http://stackoverflow.com/a/17864388/100134
     #config.vm.define :sonarqube do |sonarqube|
